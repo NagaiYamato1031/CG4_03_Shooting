@@ -21,4 +21,18 @@ public class BulletScript : MonoBehaviour
 	{
 
 	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		if(collision.gameObject.tag == "Enemy")
+		{
+			// オブジェクトとスクリプト取得
+			GameObject gm = GameObject.Find("GameManager");
+			GameManagerScript gms = gm.GetComponent<GameManagerScript>();
+			gms.Hit(transform.position);
+
+			Destroy(collision.gameObject);
+			Destroy(this.gameObject);
+		}
+	}
 }

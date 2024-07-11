@@ -12,6 +12,10 @@ public class PlayerScript : MonoBehaviour
 
 	// 弾
 	public GameObject bullet;
+	// ゲームマネージャー
+	public GameObject gameManager;
+	private GameManagerScript gameManagerScript;
+
 
 	// 1 秒での移動速度
 	float moveSpeed = 2.0f;
@@ -23,7 +27,7 @@ public class PlayerScript : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		Screen.SetResolution(1980, 1080, false);
+		gameManagerScript = gameManager.GetComponent<GameManagerScript>();
 
 		//animator = GetComponent<Animator>();
 	}
@@ -31,6 +35,10 @@ public class PlayerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if (gameManagerScript.IsGameOver())
+		{
+			return;
+		}
 		// タイムスケールが変わるとどうなるのか実験
 		if (Input.GetKey(KeyCode.DownArrow))
 		{
@@ -69,6 +77,10 @@ public class PlayerScript : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (gameManagerScript.IsGameOver())
+		{
+			return;
+		}
 		if (Input.GetKey(KeyCode.Space))
 		{
 			if (bulletTimer == 0)
@@ -85,6 +97,15 @@ public class PlayerScript : MonoBehaviour
 			{
 				bulletTimer = 0;
 			}
+		}
+	}
+
+	// 敵と接触したら終了
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.tag == "Enemy")
+		{
+			gameManagerScript.StartGameOver();
 		}
 	}
 }
